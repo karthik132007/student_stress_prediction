@@ -1,0 +1,31 @@
+Questions to Display
+
+1. Self Esteem (0–30)
+   👉 On a scale of 0 to 30, how confident do you feel about yourself and your abilities?
+
+2. Bullying (0–5)
+   👉 In the past few months, how often have you experienced or felt affected by bullying? (0 = Never, 5 = Very often)
+
+3. Sleep Quality (0–5)
+   👉 How would you rate your sleep quality recently? (0 = Very poor, 5 = Excellent)
+
+4. Future Career Concerns (0–5)
+   👉 To what extent are you worried about your future career? (0 = Not at all, 5 = Extremely concerned)
+
+5. Anxiety Level (0–21)
+   👉 On a scale of 0 to 21, how often have you experienced symptoms of anxiety such as nervousness, worry, or restlessness?
+
+6. Depression (0–27)
+   👉 On a scale of 0 to 27, how often have you felt down, hopeless, or lost interest in daily activities?
+
+7. Academic Performance (0–5)
+   👉 How would you rate your academic performance currently? (0 = Very poor, 5 = Excellent)
+
+8. Headache (0–5)
+   👉 How often do you experience headaches? (0 = Never, 5 = Very frequently)
+
+9. Safety (0–5)
+   👉 How safe do you feel in your daily environment (home, college, outside)? (0 = Not safe at all, 5 = Very safe)
+
+10. Basic Needs (0–5)
+   👉 To what extent are your basic needs (food, shelter, financial support) being met? (0 = Not at all, 5 = Completely)

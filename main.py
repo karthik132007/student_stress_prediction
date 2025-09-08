@@ -25,7 +25,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
         student_name = st.text_input("Enter your name")
         age = st.number_input("Enter your age", min_value=1, max_value=120, value=20)
 
-        st.header("📋 Questionnaire")
+        st.header("📝 Questionnaire")
         
         st.markdown("<h4 style='font-size:20px;'>1.👉 On a scale of 0 to 30, how confident do you feel about yourself and your abilities?</h4>", unsafe_allow_html=True)
         q1 = st.slider("**Self Esteem**", 0, 30, value=15)
@@ -217,7 +217,7 @@ if st.session_state.form_submitted:
     
     print(f"Final answers array: {answers}")
     
-    # View Result button with COMPACT radar chart
+    # View Result button with radar chart
     if st.button("🎯 View Result Dashboard", type="secondary"):
         try:
             # Try to import plotly
@@ -265,142 +265,184 @@ if st.session_state.form_submitted:
                              (st.session_state.q5 + st.session_state.q6 + q2_numerical + q4_numerical)
             
             if plotly_available:
-                # Create COMPACT radar chart - only 6 key metrics
+                # Create radar chart data - normalize all to 0-40 scale for better visualization
                 categories = [
                     'Self Esteem',
                     'Sleep Quality', 
                     'Safety',
+                    'Basic Needs',
+                    'Academic Performance',
                     'Low Anxiety',  # Inverted
                     'Low Depression',  # Inverted
-                    'Academic Performance'
+                    'Anti-Bullying',  # Inverted
+                    'Career Confidence',  # Inverted
+                    'Headache Free'  # Inverted
                 ]
                 
                 values = [
-                    (st.session_state.q1 / 30) * 100,  # Self Esteem
-                    (q3_numerical / 5) * 100,  # Sleep Quality
-                    (q9_numerical / 5) * 100,  # Safety
-                    100 - ((st.session_state.q5 / 20) * 100),  # Low Anxiety (inverted)
-                    100 - ((st.session_state.q6 / 30) * 100),  # Low Depression (inverted)
-                    (q7_numerical / 5) * 100   # Academic Performance
+                    (st.session_state.q1 / 30) * 40,  # Self Esteem (0-30 to 0-40)
+                    (q3_numerical / 5) * 40,  # Sleep Quality (0-5 to 0-40)
+                    (q9_numerical / 5) * 40,  # Safety (0-5 to 0-40)
+                    (q10_numerical / 5) * 40,  # Basic Needs (0-5 to 0-40)
+                    (q7_numerical / 5) * 40,  # Academic Performance (0-5 to 0-40)
+                    40 - ((st.session_state.q5 / 20) * 40),  # Low Anxiety (inverted)
+                    40 - ((st.session_state.q6 / 30) * 40),  # Low Depression (inverted)
+                    40 - ((q2_numerical / 5) * 40),  # Anti-Bullying (inverted)
+                    40 - ((q4_numerical / 5) * 40),  # Career Confidence (inverted)
+                    40 - ((q8_numerical / 5) * 40)   # Headache Free (inverted)
                 ]
                 
                 # Close the radar chart
                 values += values[:1]
                 categories += categories[:1]
                 
-                # Create SMALLER radar chart
+                # Create the radar chart
                 fig = go.Figure()
                 
                 fig.add_trace(go.Scatterpolar(
                     r=values,
                     theta=categories,
                     fill='toself',
-                    fillcolor='rgba(0, 123, 255, 0.2)',
-                    line=dict(color='rgb(0, 123, 255)', width=2),
-                    marker=dict(size=4),
-                    name='Profile'
+                    fillcolor='rgba(0, 255, 127, 0.25)',
+                    line=dict(color='rgb(0, 255, 127)', width=3),
+                    marker=dict(size=8, color='rgb(0, 255, 127)', 
+                               line=dict(width=2, color='white')),
+                    name='Mental Health Profile'
                 ))
                 
                 fig.update_layout(
-                    polar=dict(
-                        radialaxis=dict(
-                            visible=True,
-                            range=[0, 100],
-                            showticklabels=False,
-                            gridcolor='rgba(128,128,128,0.3)'
-                        ),
-                        angularaxis=dict(
-                            tickfont=dict(size=10)
-                        )
-                    ),
-                    showlegend=False,
-                    title=dict(text="Mental Health Profile", x=0.5, font=dict(size=14)),
-                    height=250,  # Much smaller!
-                    margin=dict(t=30, b=30, l=30, r=30)
-                )
-                
-                # Display compact chart
-                st.plotly_chart(fig, use_container_width=True)
+    polar=dict(
+        bgcolor='rgba(15, 15, 35, 0.95)',
+        radialaxis=dict(
+            visible=True,
+            range=[0, 40],
+            showticklabels=True,
+            tickfont=dict(color='rgba(255,255,255,0.8)', size=9),
+            gridcolor='rgba(255,255,255,0.2)',
+            linecolor='rgba(255,255,255,0.3)',
+            tick0=0,
+            dtick=10
+        ),
+        angularaxis=dict(
+            tickfont=dict(color='white', size=10, family='Arial'),
+            linecolor='rgba(255,255,255,0.3)',
+            gridcolor='rgba(255,255,255,0.2)'
+        )
+    ),
+    showlegend=False,
+    title={
+        'text': "Mental Health Assessment Report",
+        'x': 0.5,
+        'y': 0.9,
+        'font': {'size': 20, 'color': 'white', 'family': 'Arial Black'}
+    },
+    paper_bgcolor='rgba(15, 15, 35, 0.95)',
+    plot_bgcolor='rgba(15, 15, 35, 0.95)',
+    font=dict(color='white'),
+    height=400,   # 🔽 smaller
+    margin=dict(t=40, b=40, l=40, r=40)   # 🔽 tighter
+)
+
+                # Display the chart with smaller size
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.plotly_chart(fig, use_container_width=True)
             
-            # COMPACT status cards in single row
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #007bff, #0056b3); 
-                           padding: 15px; border-radius: 10px; text-align: center;">
-                    <div style="color: white; font-size: 14px;">Overall Status</div>
-                    <div style="color: white; font-size: 20px; font-weight: bold;">{prediction_result}</div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-            with col2:
-                st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #ff6b35, #f7931e); 
-                           padding: 15px; border-radius: 10px; text-align: center;">
-                    <div style="color: white; font-size: 14px;">Anxiety Index</div>
-                    <div style="color: white; font-size: 20px; font-weight: bold;">{anxiety_index}</div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-            with col3:
-                st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #28a745, #20c997); 
-                           padding: 15px; border-radius: 10px; text-align: center;">
-                    <div style="color: white; font-size: 14px;">Wellbeing Score</div>
-                    <div style="color: white; font-size: 20px; font-weight: bold;">{wellbeing_score}</div>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            # COMPACT key metrics in 2 columns
-            st.markdown("---")
+            # Create stylized metric cards
             col1, col2 = st.columns(2)
             
             with col1:
-                st.markdown("**🧠 Mental Health**")
-                st.write(f"• Self Esteem: {st.session_state.q1}/30")
-                st.write(f"• Anxiety: {st.session_state.q5}/20")
-                st.write(f"• Depression: {st.session_state.q6}/30")
+                st.markdown(f"""
+                <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+                           padding: 25px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <span style="color: {prediction_color}; font-size: 24px; margin-right: 15px;">💚</span>
+                        <span style="color: white; font-size: 18px; font-weight: bold;">Overall Status</span>
+                    </div>
+                    <div style="color: white; font-size: 36px; font-weight: bold; margin: 10px 0; text-align: center;">
+                        {prediction_result}
+                    </div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 14px; text-align: center;">
+                        Mental Health Assessment
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
                 
             with col2:
-                st.markdown("**🏠 Life Quality**")
-                st.write(f"• Sleep Quality: {q3_numerical}/5")
-                st.write(f"• Safety: {q9_numerical}/5")
-                st.write(f"• Basic Needs: {q10_numerical}/5")
+                st.markdown(f"""
+                <div style="background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); 
+                           padding: 25px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <span style="color: white; font-size: 24px; margin-right: 15px;">⚡</span>
+                        <span style="color: white; font-size: 18px; font-weight: bold;">Anxiety Index</span>
+                    </div>
+                    <div style="color: white; font-size: 36px; font-weight: bold; margin: 10px 0; text-align: center;">
+                        {anxiety_index}
+                    </div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 14px; text-align: center;">
+                        Combined Stress Level
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
             
-            # Stylish dark recommendations
+            # Key metrics breakdown
+            st.markdown("---")
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); 
+                       padding: 25px; border-radius: 15px; margin: 20px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                <h3 style="color: white; margin-bottom: 25px; text-align: center; font-size: 24px;">
+                    📊 Key Metrics Breakdown
+                </h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Resilience Score</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{resilience_score}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Self Esteem</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{st.session_state.q1}/30</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0;">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Sleep Quality</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{q3_numerical}/5</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Wellbeing Score</span>
+                            <span style="color: #f7b733; font-size: 22px; font-weight: bold;">{wellbeing_score}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Safety Level</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{q9_numerical}/5</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0;">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Basic Needs</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{q10_numerical}/5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Add recommendations based on results
+            st.markdown("### 💡 Recommendations")
+            
             if prediction_result == "Safe":
-                st.markdown(f"""
-                <div style="background: rgba(0,255,127,0.1); border-left: 4px solid #00ff7f; 
-                           padding: 15px; margin: 15px 0; border-radius: 5px;">
-                    <span style="color: #00ff7f; font-size: 16px;">🌟</span>
-                    <span style="color: white; margin-left: 10px;">Excellent mental health indicators. Keep maintaining your positive habits!</span>
-                </div>
-                """, unsafe_allow_html=True)
+                st.success("🌟 Great job! Your mental health indicators are positive. Keep maintaining your healthy habits!")
             elif prediction_result == "Moderate":
-                st.markdown(f"""
-                <div style="background: rgba(255,165,0,0.1); border-left: 4px solid #ffa500; 
-                           padding: 15px; margin: 15px 0; border-radius: 5px;">
-                    <span style="color: #ffa500; font-size: 16px;">🌤️</span>
-                    <span style="color: white; margin-left: 10px;">Some areas could benefit from attention. Focus on stress management.</span>
-                </div>
-                """, unsafe_allow_html=True)
+                st.warning("🌤️ Some areas could benefit from attention. Consider focusing on stress management and self-care.")
             elif prediction_result == "At Risk":
-                st.markdown(f"""
-                <div style="background: rgba(255,75,75,0.1); border-left: 4px solid #ff4b4b; 
-                           padding: 15px; margin: 15px 0; border-radius: 5px;">
-                    <span style="color: #ff4b4b; font-size: 16px;">🚨</span>
-                    <span style="color: white; margin-left: 10px;">Consider speaking with a mental health professional for personalized support.</span>
-                </div>
-                """, unsafe_allow_html=True)
+                st.error("🚨 Please consider speaking with a mental health professional for personalized support.")
             else:
-                st.markdown(f"""
-                <div style="background: rgba(100,149,237,0.1); border-left: 4px solid #6495ed; 
-                           padding: 15px; margin: 15px 0; border-radius: 5px;">
-                    <span style="color: #6495ed; font-size: 16px;">📈</span>
-                    <span style="color: white; margin-left: 10px;">Assessment complete. Focus on areas with lower scores for improvement.</span>
-                </div>
-                """, unsafe_allow_html=True)
+                st.info("📈 Your assessment has been completed. Focus on the areas with lower scores for improvement.")
                 
         except Exception as e:
             st.error(f"❌ Error creating dashboard: {str(e)}")

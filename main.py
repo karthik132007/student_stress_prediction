@@ -311,40 +311,42 @@ if st.session_state.form_submitted:
                 ))
                 
                 fig.update_layout(
-                    polar=dict(
-                        bgcolor='rgba(15, 15, 35, 0.95)',
-                        radialaxis=dict(
-                            visible=True,
-                            range=[0, 40],
-                            showticklabels=True,
-                            tickfont=dict(color='rgba(255,255,255,0.8)', size=10),
-                            gridcolor='rgba(255,255,255,0.2)',
-                            linecolor='rgba(255,255,255,0.3)',
-                            tick0=0,
-                            dtick=10
-                        ),
-                        angularaxis=dict(
-                            tickfont=dict(color='white', size=12, family='Arial'),
-                            linecolor='rgba(255,255,255,0.3)',
-                            gridcolor='rgba(255,255,255,0.2)'
-                        )
-                    ),
-                    showlegend=False,
-                    title={
-                        'text': "Mental Health Assessment Report",
-                        'x': 0.5,
-                        'y': 0.95,
-                        'font': {'size': 28, 'color': 'white', 'family': 'Arial Black'}
-                    },
-                    paper_bgcolor='rgba(15, 15, 35, 0.95)',
-                    plot_bgcolor='rgba(15, 15, 35, 0.95)',
-                    font=dict(color='white'),
-                    height=600,
-                    margin=dict(t=80, b=80, l=80, r=80)
-                )
-                
-                # Display the chart
-                st.plotly_chart(fig, use_container_width=True)
+    polar=dict(
+        bgcolor='rgba(15, 15, 35, 0.95)',
+        radialaxis=dict(
+            visible=True,
+            range=[0, 40],
+            showticklabels=True,
+            tickfont=dict(color='rgba(255,255,255,0.8)', size=9),
+            gridcolor='rgba(255,255,255,0.2)',
+            linecolor='rgba(255,255,255,0.3)',
+            tick0=0,
+            dtick=10
+        ),
+        angularaxis=dict(
+            tickfont=dict(color='white', size=10, family='Arial'),
+            linecolor='rgba(255,255,255,0.3)',
+            gridcolor='rgba(255,255,255,0.2)'
+        )
+    ),
+    showlegend=False,
+    title={
+        'text': "Mental Health Assessment Report",
+        'x': 0.5,
+        'y': 0.9,
+        'font': {'size': 20, 'color': 'white', 'family': 'Arial Black'}
+    },
+    paper_bgcolor='rgba(15, 15, 35, 0.95)',
+    plot_bgcolor='rgba(15, 15, 35, 0.95)',
+    font=dict(color='white'),
+    height=400,   # 🔽 smaller
+    margin=dict(t=40, b=40, l=40, r=40)   # 🔽 tighter
+)
+
+                # Display the chart with smaller size
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.plotly_chart(fig, use_container_width=True)
             
             # Create stylized metric cards
             col1, col2 = st.columns(2)

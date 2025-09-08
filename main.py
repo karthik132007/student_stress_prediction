@@ -13,16 +13,17 @@ SHEET_ID = "1BLltyU70nZ4gxCesSp7RrkhBrgW_UUMTSqNdaNcpnUc"
 def get_gs_client():
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
     try:
-        # try streamlit cloud secrets
+        # Streamlit Cloud (secrets manager)
         creds = Credentials.from_service_account_info(
             st.secrets["gcp_service_account"], scopes=SCOPES
         )
     except Exception:
-        # fallback to local json file
+        # Local fallback (JSON file)
         creds = Credentials.from_service_account_file(
             "pivotal-leaf-471506-p3-b5036d3b109e.json", scopes=SCOPES
         )
     return gspread.authorize(creds)
+
 if "phone_num" not in st.session_state:
     st.session_state.phone_num = ""
 if "student_name" not in st.session_state:

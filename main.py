@@ -22,7 +22,8 @@ def get_gs_client():
             "pivotal-leaf-471506-p3-651eda94f85e.json", scopes=SCOPES
         )
     return gspread.authorize(creds)
-
+st.write("Secrets loaded:", "gcp_service_account" in st.secrets)
+st.write("Private key starts with:", st.secrets["gcp_service_account"]["private_key"][:30])
 if "phone_num" not in st.session_state:
     st.session_state.phone_num = ""
 if "student_name" not in st.session_state:

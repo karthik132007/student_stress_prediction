@@ -331,7 +331,7 @@ if st.session_state.form_submitted:
     ),
     showlegend=False,
     title={
-        'text': "Mental Health Assessment Report",
+        'text': "",
         'x': 0.5,
         'y': 0.9,
         'font': {'size': 20, 'color': 'white', 'family': 'Arial Black'}

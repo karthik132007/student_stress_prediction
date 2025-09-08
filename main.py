@@ -152,7 +152,6 @@ if st.session_state.test_started and not st.session_state.form_submitted:
 # Results section
 if st.session_state.form_submitted:
     st.success("✅ Assessment Completed Successfully!")
-    # st.balloons()
 
     # Convert radio button answers to numerical values (0-5)
     def convert_to_numerical(answer, options_list):
@@ -181,9 +180,8 @@ if st.session_state.form_submitted:
         q10_numerical  # 0-5
     ])
     
-    # Display the numerical answers
+    # Display basic info
     st.subheader("📊 Assessment Results")
-    
     st.write(f"**Name:** {st.session_state.student_name}")
     st.write(f"**Age:** {st.session_state.age}")
     st.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -219,85 +217,231 @@ if st.session_state.form_submitted:
     
     print(f"Final answers array: {answers}")
     
-    # View Result button
-    if st.button("View Result"):
+    # View Result button with radar chart
+    if st.button("🎯 View Result Dashboard", type="secondary"):
         try:
-            # Define normalization functions
-            def std_mu(x):
-                # For a single sample, we can't compute std/mean meaningfully
-                # You might need training data statistics here
-                mu = np.mean(x)  # This will be the mean of this single sample
-                std = np.std(x) if np.std(x) != 0 else 1  # Avoid division by zero
-                return mu, std
+            # Try to import plotly
+            try:
+                import plotly.graph_objects as go
+                plotly_available = True
+            except ImportError:
+                plotly_available = False
+                st.warning("⚠️ Plotly not installed. Install it with: pip install plotly")
             
-            def normalize(x, mu, std):
-                return (x - mu) / std
-
-            # Normalize the answers
-            mu, std = std_mu(answers)
-            ans_normal = normalize(answers, mu, std)
+            # Get ML prediction
+            prediction_result = "Assessment Complete"
+            prediction_color = "#00ff7f"
             
-            # Load and use the model
             try:
                 with open("model.pkl", "rb") as f:
                     model = pickle.load(f)
                 
+                # Simple normalization for prediction
+                mu = np.mean(answers)
+                std = np.std(answers) if np.std(answers) != 0 else 1
+                ans_normal = (answers - mu) / std
+                
                 x_input = np.array(ans_normal).reshape(1, -1)
                 preds = model.predict(x_input)
-                preds = int(preds[0]) if isinstance(preds, np.ndarray) else int(preds)
+                pred_value = int(preds[0]) if isinstance(preds, np.ndarray) else int(preds)
                 
-                # Display prediction result
-                st.subheader("🎯 Assessment Result")
-                if preds == 0:
-                    st.success("✅ **Safe** - Your mental health indicators appear to be in a good range.")
-                elif preds == 1:
-                    st.warning("⚠️ **Moderate** - Some areas may need attention. Consider speaking with a counselor.")
+                if pred_value == 0:
+                    prediction_result = "Safe"
+                    prediction_color = "#00ff7f"
+                elif pred_value == 1:
+                    prediction_result = "Moderate"
+                    prediction_color = "#ffa500"
                 else:
-                    st.error("🚨 **At Risk** - Please consider reaching out to a mental health professional for support.")
+                    prediction_result = "At Risk"
+                    prediction_color = "#ff4444"
                     
-            except FileNotFoundError:
-                st.error("❌ Model file 'model.pkl' not found. Please ensure the model file is in the same directory.")
             except Exception as e:
-                st.error(f"❌ Error loading or using the model: {str(e)}")
+                st.info(f"ℹ️ Model prediction unavailable: {str(e)}")
             
-            # Calculate additional metrics
-            st.subheader("📈 Additional Metrics")
-            
-            # Convert numerical values to consistent scales for calculations
-            q4_score = q4_numerical  # Future career concerns (0-5)
-            
-            # Anxiety Index (sum of anxiety, depression, and career concerns)
-            anxiety_index = st.session_state.q5 + st.session_state.q6 + q4_score
-            st.write(f"**Anxiety Index:** {anxiety_index}")
-            
-            # Resilience Score (sum of positive factors)
+            # Calculate metrics
+            anxiety_index = st.session_state.q5 + st.session_state.q6 + q4_numerical
             resilience_score = st.session_state.q1 + q3_numerical + q9_numerical + q10_numerical
-            st.write(f"**Resilience Score:** {resilience_score}")
+            wellbeing_score = (st.session_state.q1 + q3_numerical + q9_numerical + q10_numerical) - \
+                             (st.session_state.q5 + st.session_state.q6 + q2_numerical + q4_numerical)
             
-            # Wellbeing Score (positive factors minus negative factors)
-            # Normalize scales for fair comparison
-            self_esteem_norm = st.session_state.q1 / 30 * 5  # Normalize to 0-5 scale
-            sleep_quality = q3_numerical
-            safety = q9_numerical
-            basic_needs = q10_numerical
-            anxiety_level_norm = st.session_state.q5 / 20 * 5  # Normalize to 0-5 scale
-            depression_norm = st.session_state.q6 / 30 * 5  # Normalize to 0-5 scale
-            bullying = q2_numerical
-            future_career_concerns = q4_numerical
+            if plotly_available:
+                # Create radar chart data - normalize all to 0-40 scale for better visualization
+                categories = [
+                    'Self Esteem',
+                    'Sleep Quality', 
+                    'Safety',
+                    'Basic Needs',
+                    'Academic Performance',
+                    'Low Anxiety',  # Inverted
+                    'Low Depression',  # Inverted
+                    'Anti-Bullying',  # Inverted
+                    'Career Confidence',  # Inverted
+                    'Headache Free'  # Inverted
+                ]
+                
+                values = [
+                    (st.session_state.q1 / 30) * 40,  # Self Esteem (0-30 to 0-40)
+                    (q3_numerical / 5) * 40,  # Sleep Quality (0-5 to 0-40)
+                    (q9_numerical / 5) * 40,  # Safety (0-5 to 0-40)
+                    (q10_numerical / 5) * 40,  # Basic Needs (0-5 to 0-40)
+                    (q7_numerical / 5) * 40,  # Academic Performance (0-5 to 0-40)
+                    40 - ((st.session_state.q5 / 20) * 40),  # Low Anxiety (inverted)
+                    40 - ((st.session_state.q6 / 30) * 40),  # Low Depression (inverted)
+                    40 - ((q2_numerical / 5) * 40),  # Anti-Bullying (inverted)
+                    40 - ((q4_numerical / 5) * 40),  # Career Confidence (inverted)
+                    40 - ((q8_numerical / 5) * 40)   # Headache Free (inverted)
+                ]
+                
+                # Close the radar chart
+                values += values[:1]
+                categories += categories[:1]
+                
+                # Create the radar chart
+                fig = go.Figure()
+                
+                fig.add_trace(go.Scatterpolar(
+                    r=values,
+                    theta=categories,
+                    fill='toself',
+                    fillcolor='rgba(0, 255, 127, 0.25)',
+                    line=dict(color='rgb(0, 255, 127)', width=3),
+                    marker=dict(size=8, color='rgb(0, 255, 127)', 
+                               line=dict(width=2, color='white')),
+                    name='Mental Health Profile'
+                ))
+                
+                fig.update_layout(
+                    polar=dict(
+                        bgcolor='rgba(15, 15, 35, 0.95)',
+                        radialaxis=dict(
+                            visible=True,
+                            range=[0, 40],
+                            showticklabels=True,
+                            tickfont=dict(color='rgba(255,255,255,0.8)', size=10),
+                            gridcolor='rgba(255,255,255,0.2)',
+                            linecolor='rgba(255,255,255,0.3)',
+                            tick0=0,
+                            dtick=10
+                        ),
+                        angularaxis=dict(
+                            tickfont=dict(color='white', size=12, family='Arial'),
+                            linecolor='rgba(255,255,255,0.3)',
+                            gridcolor='rgba(255,255,255,0.2)'
+                        )
+                    ),
+                    showlegend=False,
+                    title={
+                        'text': "Mental Health Assessment Report",
+                        'x': 0.5,
+                        'y': 0.95,
+                        'font': {'size': 28, 'color': 'white', 'family': 'Arial Black'}
+                    },
+                    paper_bgcolor='rgba(15, 15, 35, 0.95)',
+                    plot_bgcolor='rgba(15, 15, 35, 0.95)',
+                    font=dict(color='white'),
+                    height=600,
+                    margin=dict(t=80, b=80, l=80, r=80)
+                )
+                
+                # Display the chart
+                st.plotly_chart(fig, use_container_width=True)
             
-            wellbeing = (self_esteem_norm + sleep_quality + safety + basic_needs) - \
-                       (anxiety_level_norm + depression_norm + bullying + future_career_concerns)
+            # Create stylized metric cards
+            col1, col2 = st.columns(2)
             
-            st.write(f"**Wellbeing Score:** {wellbeing:.2f}")
+            with col1:
+                st.markdown(f"""
+                <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+                           padding: 25px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <span style="color: {prediction_color}; font-size: 24px; margin-right: 15px;">💚</span>
+                        <span style="color: white; font-size: 18px; font-weight: bold;">Overall Status</span>
+                    </div>
+                    <div style="color: white; font-size: 36px; font-weight: bold; margin: 10px 0; text-align: center;">
+                        {prediction_result}
+                    </div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 14px; text-align: center;">
+                        Mental Health Assessment
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+            with col2:
+                st.markdown(f"""
+                <div style="background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); 
+                           padding: 25px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <span style="color: white; font-size: 24px; margin-right: 15px;">⚡</span>
+                        <span style="color: white; font-size: 18px; font-weight: bold;">Anxiety Index</span>
+                    </div>
+                    <div style="color: white; font-size: 36px; font-weight: bold; margin: 10px 0; text-align: center;">
+                        {anxiety_index}
+                    </div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 14px; text-align: center;">
+                        Combined Stress Level
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
             
-            # Provide interpretation
-            if wellbeing > 5:
-                st.info("🌟 Your overall wellbeing score suggests you're doing well!")
-            elif wellbeing > 0:
-                st.info("🌤️ Your wellbeing is moderate. Focus on strengthening positive areas.")
+            # Key metrics breakdown
+            st.markdown("---")
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); 
+                       padding: 25px; border-radius: 15px; margin: 20px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                <h3 style="color: white; margin-bottom: 25px; text-align: center; font-size: 24px;">
+                    📊 Key Metrics Breakdown
+                </h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Resilience Score</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{resilience_score}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Self Esteem</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{st.session_state.q1}/30</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0;">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Sleep Quality</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{q3_numerical}/5</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Wellbeing Score</span>
+                            <span style="color: #f7b733; font-size: 22px; font-weight: bold;">{wellbeing_score}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Safety Level</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{q9_numerical}/5</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; 
+                                   padding: 15px 0;">
+                            <span style="color: rgba(255,255,255,0.9); font-size: 16px;">Basic Needs</span>
+                            <span style="color: #00ff7f; font-size: 22px; font-weight: bold;">{q10_numerical}/5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Add recommendations based on results
+            st.markdown("### 💡 Recommendations")
+            
+            if prediction_result == "Safe":
+                st.success("🌟 Great job! Your mental health indicators are positive. Keep maintaining your healthy habits!")
+            elif prediction_result == "Moderate":
+                st.warning("🌤️ Some areas could benefit from attention. Consider focusing on stress management and self-care.")
+            elif prediction_result == "At Risk":
+                st.error("🚨 Please consider speaking with a mental health professional for personalized support.")
             else:
-                st.info("🌧️ Your wellbeing score suggests some challenges. Consider seeking support.")
+                st.info("📈 Your assessment has been completed. Focus on the areas with lower scores for improvement.")
                 
         except Exception as e:
-            st.error(f"❌ An error occurred while processing results: {str(e)}")
-            st.info("Please ensure all required files are present and try again.")
+            st.error(f"❌ Error creating dashboard: {str(e)}")
+            st.info("Please make sure plotly is installed: pip install plotly")

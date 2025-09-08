@@ -5,3 +5,5 @@ streamlit
 matplotlib
 seaborn
 plotly
+gspread
+google-auth

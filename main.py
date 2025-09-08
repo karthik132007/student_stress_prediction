@@ -3,6 +3,32 @@ import numpy as np
 from datetime import datetime
 import pickle
 import streamlit.components.v1 as components
+import gspread
+from google.oauth2.service_account import Credentials
+import uuid
+
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+SHEET_ID = "1BLltyU70nZ4gxCesSp7RrkhBrgW_UUMTSqNdaNcpnUc"
+
+def get_gs_client():
+    SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+    try:
+        # try streamlit cloud secrets
+        creds = Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"], scopes=SCOPES
+        )
+    except Exception:
+        # fallback to local json file
+        creds = Credentials.from_service_account_file(
+            "pivotal-leaf-471506-p3-b5036d3b109e.json", scopes=SCOPES
+        )
+    return gspread.authorize(creds)
+if "phone_num" not in st.session_state:
+    st.session_state.phone_num = ""
+if "student_name" not in st.session_state:
+    st.session_state.student_name = ""
+if "age" not in st.session_state:
+    st.session_state.age = ""
 
 st.sidebar.title("Welcome!")
 st.sidebar.markdown("[Dashboard](dashboard.py)")
@@ -147,6 +173,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
 
         if submitted:
             # Store data in session state
+            st.session_state.phone_num=phone_num
             st.session_state.student_name = student_name
             st.session_state.age = age
             st.session_state.q1 = q1
@@ -323,6 +350,36 @@ if st.session_state.form_submitted:
                 # Close the radar chart
                 values += values[:1]
                 categories += categories[:1]
+                try:
+                    client = get_gs_client()
+                    sh = client.open_by_key(SHEET_ID).sheet1
+
+                    timestamp = datetime.utcnow().isoformat()
+
+                    row = [
+                    st.session_state.phone_num,
+                    st.session_state.student_name,
+                    st.session_state.age,
+                    timestamp,
+                    st.session_state.q1,
+                    q2_numerical,
+                    q3_numerical,
+                    q4_numerical,
+                    st.session_state.q5,
+                    st.session_state.q6,
+                    q7_numerical,
+                    q8_numerical,
+                    q9_numerical,
+                    q10_numerical,
+                    int(pred_value),
+                    anxiety_index,
+                    resilience_score,
+                    wellbeing_score
+                    ]
+                    sh.append_row(row)
+                    st.success("Saved response to Google Sheets ✅")
+                except Exception as e:
+                    st.error(f"Failed to save to Google Sheets: {e}")
                 
                 # Create the radar chart
                 fig = go.Figure()

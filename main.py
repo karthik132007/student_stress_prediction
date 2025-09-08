@@ -2,6 +2,14 @@ import streamlit as st
 import numpy as np
 from datetime import datetime
 import pickle
+import streamlit.components.v1 as components
+import streamlit as st
+import streamlit.components.v1 as components
+
+
+st.sidebar.title("Welcome!")
+st.sidebar.markdown("Dashboard")
+st.sidebar.markdown("Take Self-Assessment")
 
 # Initialize session state
 if 'test_started' not in st.session_state:
@@ -10,10 +18,21 @@ if 'form_submitted' not in st.session_state:
     st.session_state.form_submitted = False
 
 st.title("🧠 Mental Health Self-Assessment")
-
+st.markdown("---")
+col1,col2=st.columns(2,gap="large")
+with col1:
+    st.image("people-with-mental-health-vector.jpg")
+with col2:
+    st.subheader("What Is This App?")
+    st.text("Mental health is crucial for living a balanced and happy life. This app helps you track your mood, stress, and self-esteem, visualize trends over time, and gain insights to improve your overall well-being")
 # Start test section
+st.text("\n")
+st.text("\n")
+st.text("\n")
+phone_num=st.text_input("Enter Your Phone Number")
 if not st.session_state.test_started:
-    if st.button("Start Test"):
+    _, center, _ = st.columns((2, 1, 2))
+    if center.button("Start Test"):
         st.session_state.test_started = True
         st.session_state.form_submitted = False
         st.rerun()
@@ -23,6 +42,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
     with st.form("mental_health_form"):
         st.header("👤 Personal Info")
         student_name = st.text_input("Enter your name")
+        
         age = st.number_input("Enter your age", min_value=1, max_value=120, value=20)
 
         st.header("📝 Questionnaire")
@@ -206,19 +226,18 @@ if st.session_state.form_submitted:
         st.write(f"**10. Basic Needs:** {q10_numerical}/5 ({st.session_state.q10})")
     
     # Reset button
-    st.markdown("---")
-    col1, col2, col3 = st.columns([1,1,1])
-    with col2:
-        if st.button("🔄 Take Assessment Again", type="primary"):
+    # st.markdown("---")
+    col1, col2 = st.columns([1,1])
+    with col1:
+        if st.button("🔄 Take Assessment Again", type="secondary"):
             # Clear all session state
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
-    
-    print(f"Final answers array: {answers}")
-    
+    with col2:
+        view=st.button("🎯 View Result Dashboard", type="primary")
     # View Result button with radar chart
-    if st.button("🎯 View Result Dashboard", type="secondary"):
+    if view:
         try:
             # Try to import plotly
             try:
@@ -340,7 +359,7 @@ if st.session_state.form_submitted:
     plot_bgcolor='rgba(15, 15, 35, 0.95)',
     font=dict(color='white'),
     height=400,   # 🔽 smaller
-    margin=dict(t=40, b=40, l=40, r=40)   # 🔽 tighter
+    margin=dict(t=50, b=50, l=90, r=90)   # 🔽 tighter
 )
 
                 # Display the chart with smaller size
@@ -447,3 +466,33 @@ if st.session_state.form_submitted:
         except Exception as e:
             st.error(f"❌ Error creating dashboard: {str(e)}")
             st.info("Please make sure plotly is installed: pip install plotly")
+            
+        # chat bot
+        if "messages" not in st.session_state:
+             st.session_state.messages = []
+
+        st.write("### Personalized Chatbot")  # Small header on top
+        st.write("how can i help you?")
+
+        # Display chat messages
+        for msg in st.session_state.messages:
+            if msg["role"] == "user":
+                st.markdown(f"**You:** {msg['content']}")
+            else:
+                st.markdown(f"**Bot:** {msg['content']}")
+
+        prompt=st.chat_input("Ask Personalized Questions")
+        if prompt:
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            bot_reply = f"Echo: {prompt}"  # Temporary echo
+            st.session_state.messages.append({"role": "bot", "content": bot_reply})
+            st.experimental_rerun()  # Refresh to show new messages
+    st.markdown("---")    
+    st.subheader("Faq's")   
+    with st.expander("How to open My Dashbrard?"):
+        st.markdown("Click on menu icon on top left corner and navigate to it")
+    with st.expander("Why are u asking my phone number?"):
+        st.markdown("To identify 'unique' user and save your data to make dashboard")
+    with st.expander("Is my data safe?"):
+        st.markdown("Your data will be stored in private Database to make 'personalized' dashboard for you")
+    

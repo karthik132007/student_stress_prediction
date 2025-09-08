@@ -1,6 +1,10 @@
 import streamlit as st
 import requests
 
+
+def app():
+    st.title("Dashboard Page")
+    st.write("Your dashboard content goes here.")
 st.title("Gemini Chat Integration")
 
 user_input = st.text_input("Ask Gemini something:")

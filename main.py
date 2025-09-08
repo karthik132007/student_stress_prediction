@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 from datetime import datetime
+import dashboard
 import pickle
 import streamlit.components.v1 as components
 import gspread
@@ -11,7 +12,9 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SHEET_ID = "1BLltyU70nZ4gxCesSp7RrkhBrgW_UUMTSqNdaNcpnUc"
 
 from pathlib import Path
-
+def app():
+    st.title("Dashboard Page")
+    st.write("Your dashboard content goes here.")
 def get_gs_client():
     if "gcp_service_account" in st.secrets:
         creds = Credentials.from_service_account_info(
@@ -22,8 +25,7 @@ def get_gs_client():
             "pivotal-leaf-471506-p3-651eda94f85e.json", scopes=SCOPES
         )
     return gspread.authorize(creds)
-st.write("Secrets loaded:", "gcp_service_account" in st.secrets)
-st.write("Private key starts with:", st.secrets["gcp_service_account"]["private_key"][:30])
+
 if "phone_num" not in st.session_state:
     st.session_state.phone_num = ""
 if "student_name" not in st.session_state:
@@ -32,8 +34,13 @@ if "age" not in st.session_state:
     st.session_state.age = ""
 
 st.sidebar.title("Welcome!")
-st.sidebar.markdown("[Dashboard](dashboard.py)")
-st.sidebar.markdown("[Take Self-Assessment](main.py)")
+st.sidebar.title("Navigation")
+page = st.sidebar.selectbox("Go to", ["Dashboard", "Self-Assessment"])
+
+if page == "Dashboard":
+    dashboard.app()  # Define an `app()` function in dashboard.py
+elif page == "Self-Assessment":
+    st.rerun() # Define an `app()` function in main.py
 st.sidebar.empty()
 with st.sidebar.expander("Creators :"):
     st.markdown("1. Karthikeya Kumar\n2. Sai Sriraj\n3. Anand Karthik\n4. Pardha Saradhi")

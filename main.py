@@ -8,8 +8,8 @@ import streamlit.components.v1 as components
 
 
 st.sidebar.title("Welcome!")
-st.sidebar.markdown("Dashboard")
-st.sidebar.markdown("Take Self-Assessment")
+st.sidebar.markdown("[Dashboard](dashboard.py)")
+st.sidebar.markdown("[Take Self-Assessment](main.py)")
 
 # Initialize session state
 if 'test_started' not in st.session_state:
@@ -238,6 +238,14 @@ if st.session_state.form_submitted:
         view=st.button("🎯 View Result Dashboard", type="primary")
     # View Result button with radar chart
     if view:
+        import time
+        progress = st.progress(0)
+
+        for percent in range(100):
+            time.sleep(0.01)
+            progress.progress(percent + 1)
+
+        st.success("Done! ✅")
         try:
             # Try to import plotly
             try:

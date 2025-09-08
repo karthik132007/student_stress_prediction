@@ -3,13 +3,14 @@ import numpy as np
 from datetime import datetime
 import pickle
 import streamlit.components.v1 as components
-import streamlit as st
-import streamlit.components.v1 as components
-
 
 st.sidebar.title("Welcome!")
 st.sidebar.markdown("[Dashboard](dashboard.py)")
 st.sidebar.markdown("[Take Self-Assessment](main.py)")
+st.sidebar.empty()
+with st.sidebar.expander("Creators :"):
+    st.markdown("1. Karthikeya Kumar\n2. Sai Sriraj\n3. Anand Karthik\n4. Pardha Saradhi")
+
 
 # Initialize session state
 if 'test_started' not in st.session_state:
@@ -21,7 +22,7 @@ st.title("🧠 Mental Health Self-Assessment")
 st.markdown("---")
 col1,col2=st.columns(2,gap="large")
 with col1:
-    st.image("people-with-mental-health-vector.jpg")
+    st.image("people-with-mental-health-vector.jpg",use_container_width =True)
 with col2:
     st.subheader("What Is This App?")
     st.text("Mental health is crucial for living a balanced and happy life. This app helps you track your mood, stress, and self-esteem, visualize trends over time, and gain insights to improve your overall well-being")
@@ -381,7 +382,7 @@ if st.session_state.form_submitted:
             with col1:
                 st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
-                           padding: 25px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                           padding: 5px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
                     <div style="display: flex; align-items: center; margin-bottom: 15px;">
                         <span style="color: {prediction_color}; font-size: 24px; margin-right: 15px;">💚</span>
                         <span style="color: white; font-size: 18px; font-weight: bold;">Overall Status</span>
@@ -398,8 +399,8 @@ if st.session_state.form_submitted:
             with col2:
                 st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); 
-                           padding: 25px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                           padding: 5px; border-radius: 15px; margin: 10px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
                         <span style="color: white; font-size: 24px; margin-right: 15px;">⚡</span>
                         <span style="color: white; font-size: 18px; font-weight: bold;">Anxiety Index</span>
                     </div>
@@ -464,10 +465,13 @@ if st.session_state.form_submitted:
             
             if prediction_result == "Safe":
                 st.success("🌟 Great job! Your mental health indicators are positive. Keep maintaining your healthy habits!")
+                st.success("🍃 Keep nurturing your routine—it’s working!")
             elif prediction_result == "Moderate":
                 st.warning("🌤️ Some areas could benefit from attention. Consider focusing on stress management and self-care.")
+                st.warning("🍵 Limit caffeine and stay hydrated")
             elif prediction_result == "At Risk":
                 st.error("🚨 Please consider speaking with a mental health professional for personalized support.")
+                st.error("🧘 Try mindfulness or meditation daily.")
             else:
                 st.info("📈 Your assessment has been completed. Focus on the areas with lower scores for improvement.")
                 
@@ -498,8 +502,8 @@ if st.session_state.form_submitted:
     st.markdown("---")    
     st.subheader("Faq's")   
     with st.expander("How to open My Dashbrard?"):
-        st.markdown("Click on menu icon on top left corner and navigate to it")
-    with st.expander("Why are u asking my phone number?"):
+        st.markdown("Click on arrow icon on top left corner and navigate to it")
+    with st.expander("Why are you asking my phone number?"):
         st.markdown("To identify 'unique' user and save your data to make dashboard")
     with st.expander("Is my data safe?"):
         st.markdown("Your data will be stored in private Database to make 'personalized' dashboard for you")

@@ -30,14 +30,10 @@ if "student_name" not in st.session_state:
 if "age" not in st.session_state:
     st.session_state.age = ""
 
-st.sidebar.title("Welcome!")
-st.sidebar.markdown("[Dashboard](dashboard.py)")
-st.sidebar.markdown("[Take Self-Assessment](main.py)")
 st.sidebar.empty()
 with st.sidebar.expander("Creators :"):
-    st.markdown("1. Karthikeya Kumar\n2. Sai Sriraj\n3. Anand Karthik\n4. Pardha Saradhi")
-
-
+    st.markdown("1. Karthikeya Kumar\n2. Sai Sri Raj\n3. Anand Karthik\n4. Partha Saradhi")
+    
 # Initialize session state
 if 'test_started' not in st.session_state:
     st.session_state.test_started = False
@@ -270,7 +266,7 @@ if st.session_state.form_submitted:
         progress = st.progress(0)
 
         for percent in range(100):
-            time.sleep(0.01)
+            time.sleep(0.05)
             progress.progress(percent + 1)
 
         st.success("Done! ✅")

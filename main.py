@@ -13,15 +13,14 @@ SHEET_ID = "1BLltyU70nZ4gxCesSp7RrkhBrgW_UUMTSqNdaNcpnUc"
 from pathlib import Path
 
 def get_gs_client():
-    try:
-        # Streamlit Cloud
+    if "gcp_service_account" in st.secrets:
         creds = Credentials.from_service_account_info(
             st.secrets["gcp_service_account"], scopes=SCOPES
         )
-    except Exception:
-        # Local
-        json_file = Path(__file__).parent / "pivotal-leaf-471506-p3-651eda94f85e.json"
-        creds = Credentials.from_service_account_file(str(json_file), scopes=SCOPES)
+    else:
+        creds = Credentials.from_service_account_file(
+            "pivotal-leaf-471506-p3-651eda94f85e.json", scopes=SCOPES
+        )
     return gspread.authorize(creds)
 
 if "phone_num" not in st.session_state:

@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 from datetime import datetime
+import pickle
 
 # Initialize session state
 if 'test_started' not in st.session_state:
@@ -151,7 +152,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
 # Results section
 if st.session_state.form_submitted:
     st.success("✅ Assessment Completed Successfully!")
-    st.balloons()
+    # st.balloons()
 
     # Convert radio button answers to numerical values (0-5)
     def convert_to_numerical(answer, options_list):
@@ -183,17 +184,10 @@ if st.session_state.form_submitted:
     # Display the numerical answers
     st.subheader("📊 Assessment Results")
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.write(f"**Name:** {st.session_state.student_name}")
-        st.write(f"**Age:** {st.session_state.age}")
-        st.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    
-    with col2:
-        st.write(f"**Numerical Answers Array:**")
-        st.code(f"{answers}")
-    
+    st.write(f"**Name:** {st.session_state.student_name}")
+    st.write(f"**Age:** {st.session_state.age}")
+    st.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+
     # Display individual scores
     st.subheader("📋 Detailed Scores")
     
@@ -222,5 +216,88 @@ if st.session_state.form_submitted:
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
-
+    
     print(f"Final answers array: {answers}")
+    
+    # View Result button
+    if st.button("View Result"):
+        try:
+            # Define normalization functions
+            def std_mu(x):
+                # For a single sample, we can't compute std/mean meaningfully
+                # You might need training data statistics here
+                mu = np.mean(x)  # This will be the mean of this single sample
+                std = np.std(x) if np.std(x) != 0 else 1  # Avoid division by zero
+                return mu, std
+            
+            def normalize(x, mu, std):
+                return (x - mu) / std
+
+            # Normalize the answers
+            mu, std = std_mu(answers)
+            ans_normal = normalize(answers, mu, std)
+            
+            # Load and use the model
+            try:
+                with open("model.pkl", "rb") as f:
+                    model = pickle.load(f)
+                
+                x_input = np.array(ans_normal).reshape(1, -1)
+                preds = model.predict(x_input)
+                preds = int(preds[0]) if isinstance(preds, np.ndarray) else int(preds)
+                
+                # Display prediction result
+                st.subheader("🎯 Assessment Result")
+                if preds == 0:
+                    st.success("✅ **Safe** - Your mental health indicators appear to be in a good range.")
+                elif preds == 1:
+                    st.warning("⚠️ **Moderate** - Some areas may need attention. Consider speaking with a counselor.")
+                else:
+                    st.error("🚨 **At Risk** - Please consider reaching out to a mental health professional for support.")
+                    
+            except FileNotFoundError:
+                st.error("❌ Model file 'model.pkl' not found. Please ensure the model file is in the same directory.")
+            except Exception as e:
+                st.error(f"❌ Error loading or using the model: {str(e)}")
+            
+            # Calculate additional metrics
+            st.subheader("📈 Additional Metrics")
+            
+            # Convert numerical values to consistent scales for calculations
+            q4_score = q4_numerical  # Future career concerns (0-5)
+            
+            # Anxiety Index (sum of anxiety, depression, and career concerns)
+            anxiety_index = st.session_state.q5 + st.session_state.q6 + q4_score
+            st.write(f"**Anxiety Index:** {anxiety_index}")
+            
+            # Resilience Score (sum of positive factors)
+            resilience_score = st.session_state.q1 + q3_numerical + q9_numerical + q10_numerical
+            st.write(f"**Resilience Score:** {resilience_score}")
+            
+            # Wellbeing Score (positive factors minus negative factors)
+            # Normalize scales for fair comparison
+            self_esteem_norm = st.session_state.q1 / 30 * 5  # Normalize to 0-5 scale
+            sleep_quality = q3_numerical
+            safety = q9_numerical
+            basic_needs = q10_numerical
+            anxiety_level_norm = st.session_state.q5 / 20 * 5  # Normalize to 0-5 scale
+            depression_norm = st.session_state.q6 / 30 * 5  # Normalize to 0-5 scale
+            bullying = q2_numerical
+            future_career_concerns = q4_numerical
+            
+            wellbeing = (self_esteem_norm + sleep_quality + safety + basic_needs) - \
+                       (anxiety_level_norm + depression_norm + bullying + future_career_concerns)
+            
+            st.write(f"**Wellbeing Score:** {wellbeing:.2f}")
+            
+            # Provide interpretation
+            if wellbeing > 5:
+                st.info("🌟 Your overall wellbeing score suggests you're doing well!")
+            elif wellbeing > 0:
+                st.info("🌤️ Your wellbeing is moderate. Focus on strengthening positive areas.")
+            else:
+                st.info("🌧️ Your wellbeing score suggests some challenges. Consider seeking support.")
+                
+        except Exception as e:
+            st.error(f"❌ An error occurred while processing results: {str(e)}")
+            st.info("Please ensure all required files are present and try again.")

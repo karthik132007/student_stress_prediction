@@ -9,6 +9,7 @@ import uuid
 import pandas as pd
 from fpdf import FPDF
 import streamlit as st
+from model_utils import preprocess_input
 
 st.toast("Use the arrow on the top-left corner to open the sidebar menu!")
 
@@ -297,7 +298,7 @@ if st.session_state.form_submitted:
                 std = np.std(answers) if np.std(answers) != 0 else 1
                 ans_normal = (answers - mu) / std
                 
-                x_input = np.array(ans_normal).reshape(1, -1)
+                x_input = preprocess_input(answers)
                 preds = model.predict(x_input)
                 pred_value = int(preds[0]) if isinstance(preds, np.ndarray) else int(preds)
                 

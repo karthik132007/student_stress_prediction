@@ -4,7 +4,11 @@ import numpy as np
 
 class ModelLoadError(Exception):
     pass
+with open("scaler.pkl", "rb") as f:
+    scaler = pickle.load(f)
 
+def preprocess_input(features):
+    return scaler.transform([features])
 def load_model():
     model_path = Path(__file__).resolve().parent / "model.pkl"
     if not model_path.exists():

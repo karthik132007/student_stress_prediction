@@ -8,3 +8,4 @@ plotly
 gspread
 google-auth
 FPDF
+google.generativeai

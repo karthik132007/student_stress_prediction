@@ -6,6 +6,8 @@ import streamlit.components.v1 as components
 import gspread
 from google.oauth2.service_account import Credentials
 import uuid
+import pandas as pd
+from fpdf import FPDF
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SHEET_ID = "1BLltyU70nZ4gxCesSp7RrkhBrgW_UUMTSqNdaNcpnUc"
@@ -259,7 +261,7 @@ if st.session_state.form_submitted:
                 del st.session_state[key]
             st.rerun()
     with col2:
-        view=st.button("🎯 View Result Dashboard", type="primary")
+        view=st.button("🎯 View Result", type="primary")
     # View Result button with radar chart
     if view:
         import time
@@ -531,7 +533,67 @@ if st.session_state.form_submitted:
         except Exception as e:
             st.error(f"❌ Error creating dashboard: {str(e)}")
             st.info("Please make sure plotly is installed: pip install plotly")
+        def generate_pdf():
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+
+            # Title
+            pdf.set_font("Arial", 'B', 16)
+            pdf.cell(200, 10, txt="Mental Health Self-Assessment Report", ln=True, align="C")
+            pdf.ln(10)
+
+    # Basic Info
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt=f"Name: {st.session_state.student_name}", ln=True)
+            pdf.cell(200, 10, txt=f"Age: {st.session_state.age}", ln=True)
+            pdf.cell(200, 10, txt=f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}", ln=True)
+            pdf.ln(10)
+
+    # Scores
+            pdf.set_font("Arial", 'B', 14)
+            pdf.cell(200, 10, txt="Detailed Scores:", ln=True)
+            pdf.set_font("Arial", size=12)
+            pdf.multi_cell(0, 10, 
+            f"1. Self Esteem: {st.session_state.q1}/30\n"
+            f"2. Bullying: {st.session_state.q2}\n"
+            f"3. Sleep Quality: {st.session_state.q3}\n"
+            f"4. Future Career Concerns: {st.session_state.q4}\n"
+            f"5. Anxiety Level: {st.session_state.q5}/20\n"
+            f"6. Depression: {st.session_state.q6}/30\n"
+            f"7. Academic Performance: {st.session_state.q7}\n"
+            f"8. Headache: {st.session_state.q8}\n"
+            f"9. Safety: {st.session_state.q9}\n"
+            f"10. Basic Needs: {st.session_state.q10}\n"
+            f"10. Basic Needs: {st.session_state.q10}\n"
+            )
+            pdf.set_font("Arial", 'B', 14)
+            pdf.cell(200, 10, txt="Results:", ln=True)
+            pdf.set_font("Arial", size=12)
+            pdf.multi_cell(0, 10, 
+            f"1. Stress Level: {prediction_result}/30\n"
+            f"2. anxiety index: {anxiety_index}\n"
+            f"3. Resilience Score: {resilience_score}\n"
+            f"4. Wellbeing Score: {wellbeing_score}\n"
+            )
             
+
+            return pdf.output(dest="S").encode("latin-1")
+        st.markdown("\n")
+
+        pdf_data = generate_pdf()
+        st.download_button(
+            label="📄 Download Report as PDF",
+            data=pdf_data,
+            file_name="assessment_report.pdf",
+            mime="application/pdf",type="primary"
+)
+        # help line 
+        st.markdown("---")
+        st.subheader("Top Mental Health Care Centers In India")
+        df=pd.read_csv("top_10_mental_health_hospitals_india.csv")
+        st.dataframe(df, height=200, width=700) 
+        st.markdown("---")
         # chat bot
         if "messages" not in st.session_state:
              st.session_state.messages = []

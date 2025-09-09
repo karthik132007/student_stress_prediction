@@ -1,15 +1,16 @@
 import streamlit as st
 
 def mood_recommender():
-    st.title("🎬 Mood-Based Video Recommender")
+    st.subheader("🎬 Mood-Based Video Recommender")
     st.write("Pick your mood and explore a feed of YouTube videos curated for you ✨")
+    
 
     # Mood selection
     mood = st.selectbox(
         "How are you feeling right now?",
         ["Happy", "Sad", "Stressed", "Relaxed", "Low Motivated", "Angry"]
     )
-
+    st.markdown("---")
     # Dictionary of moods → list of videos (id, title, channel)
     videos = {
         "Happy": [

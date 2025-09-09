@@ -379,7 +379,7 @@ if st.session_state.form_submitted:
                     wellbeing_score
                     ]
                     sh.append_row(row)
-                    st.success("Saved response to Google Sheets ✅")
+                    st.success("Saved response to DataBase✅")
                 except Exception as e:
                     st.error(f"Failed to save to Google Sheets: {e}")
                 

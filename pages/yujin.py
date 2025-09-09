@@ -1,6 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
-
+st.write("🔑 Available secrets:", list(st.secrets.keys()))
 # Page title
 st.title("💬 Yujin")
 st.markdown("👋 Hi, I'm **Yujin** — your personal Mental Health Assistant.")

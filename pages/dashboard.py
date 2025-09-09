@@ -47,8 +47,12 @@ if st.button("Fetch My Data"):
     else:
         st.error("Please enter a valid phone number.")
     st.subheader("Anxiety index overtime")
-    st.line_chart(df["anxiety_index"])
+    st.line_chart(df["anxiety_index"],use_container_width=True)
     col1,col2=st.columns(2)
     with col1:
         st.subheader("Resilience score overtime")
-        st.line_chart(df["resilience_score"])
+        st.line_chart(df["resilience_score"],use_container_width=True)
+    with col2:
+        st.subheader("Last Checked Results")
+        new_df = df[['anxiety_index', 'resilience_score'],['wellbeing_score']]
+        st.table(new_df)

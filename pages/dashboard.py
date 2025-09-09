@@ -46,5 +46,7 @@ if st.button("Fetch My Data"):
             st.warning("No data found for this phone number.")
     else:
         st.error("Please enter a valid phone number.")
-    st.line_chart(data=df, x="timestamp", y="wellbeing_score")
-
+    st.line_chart(df["wellbeing_score"])
+    col1,col2=st.columns(2)
+    with col1:
+        st.line_chart(df[["anxiety_index", "resilience_score", "wellbeing_score"]])

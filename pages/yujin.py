@@ -4,7 +4,7 @@ import google.generativeai as genai
 # Page title
 st.title("💬 Yujin")
 st.markdown("👋 Hi, I'm **Yujin** — your personal Mental Health Assistant.")
-
+st.sidebar.title("Welcome!")
 # Configure Gemini
 genai.configure(api_key=st.secrets["gemini_api_key"])
 model = genai.GenerativeModel("gemini-2.5-flash")  # fast + cheap

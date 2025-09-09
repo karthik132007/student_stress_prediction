@@ -32,7 +32,7 @@ if "student_name" not in st.session_state:
     st.session_state.student_name = ""
 if "age" not in st.session_state:
     st.session_state.age = ""
-
+st.sidebar.title("Welcome!")
 st.sidebar.empty()
 with st.sidebar.expander("Creators :"):
     st.markdown("1. Karthikeya Kumar\n2. Sai Sri Raj\n3. Anand Karthik\n4. Partha Saradhi")

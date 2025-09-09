@@ -57,4 +57,5 @@ if st.button("Fetch My Data"):
         cols=["Anxiety Index","Resilience Score", "Wellbeing Score"]
         new_df = df[["anxiety_index", "resilience_score", "wellbeing_score"]]
         new_df.columns=cols
+        new_df=new_df.tail(1)
         st.table(new_df)

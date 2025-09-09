@@ -56,5 +56,5 @@ if st.button("Fetch My Data"):
         st.subheader("Recent Results")
         cols=["Anxiety Index","Resilience Score", "Wellbeing Score"]
         new_df = df[["anxiety_index", "resilience_score", "wellbeing_score"]]
-        new_df.columns(cols)
+        new_df.columns=cols
         st.table(new_df)

@@ -2,8 +2,8 @@ import streamlit as st
 import google.generativeai as genai
 
 # Page title
-st.title("💬 Yujin")
-st.markdown("👋 Hi, I'm **Yujin** — your personal Mental Health Assistant.")
+st.title("💬 YujinAI")
+st.markdown("👋 Hi, I'm **YujinAI** — your personal Mental Health Assistant.")
 st.sidebar.title("Welcome!")
 # Configure Gemini
 genai.configure(api_key=st.secrets["gemini_api_key"])
@@ -11,7 +11,7 @@ model = genai.GenerativeModel("gemini-2.5-flash")  # fast + cheap
 
 # System instruction (defines Yujin’s personality)
 SYSTEM_PROMPT = """
-You are Yujin, a warm, empathetic mental health assistant.
+You are YujinAI, a warm, empathetic mental health assistant.
 - Always reply in a supportive, encouraging tone.
 - Give practical and healthy suggestions (like sleep habits, stress relief, journaling, exercise).
 - Keep answers short, clear, and positive.

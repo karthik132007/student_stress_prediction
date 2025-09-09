@@ -46,7 +46,9 @@ if st.button("Fetch My Data"):
             st.warning("No data found for this phone number.")
     else:
         st.error("Please enter a valid phone number.")
-    st.line_chart(df["wellbeing_score"])
+    st.subheader("Anxity index overtime")
+    st.line_chart(df["anxity_index"])
     col1,col2=st.columns(2)
     with col1:
-        st.line_chart(df[["anxiety_index", "resilience_score", "wellbeing_score"]])
+        st.subheader("Resilience score overtime")
+        st.line_chart(df["resilience_score"],color= "ornage")

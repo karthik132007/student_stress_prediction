@@ -9,6 +9,7 @@ import uuid
 import pandas as pd
 from fpdf import FPDF
 
+
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SHEET_ID = "1BLltyU70nZ4gxCesSp7RrkhBrgW_UUMTSqNdaNcpnUc"
 
@@ -595,25 +596,8 @@ if st.session_state.form_submitted:
         st.dataframe(df, height=200, width=700) 
         st.markdown("---")
         # chat bot
-        if "messages" not in st.session_state:
-             st.session_state.messages = []
-
-        st.write("### Personalized Chatbot")  # Small header on top
-        st.write("how can i help you?")
-
-        # Display chat messages
-        for msg in st.session_state.messages:
-            if msg["role"] == "user":
-                st.markdown(f"**You:** {msg['content']}")
-            else:
-                st.markdown(f"**Bot:** {msg['content']}")
-
-        prompt=st.chat_input("Ask Personalized Questions")
-        if prompt:
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            bot_reply = f"Echo: {prompt}"  # Temporary echo
-            st.session_state.messages.append({"role": "bot", "content": bot_reply})
-            st.experimental_rerun()  # Refresh to show new messages
+        # Configure Gemini with API key from secrets
+        
     st.markdown("---")    
     st.subheader("Faq's")   
     with st.expander("How to open My Dashbrard?"):

@@ -8,7 +8,9 @@ from google.oauth2.service_account import Credentials
 import uuid
 import pandas as pd
 from fpdf import FPDF
+import streamlit as st
 
+st.toast("Use the arrow on the top-left corner to open the sidebar menu!")
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SHEET_ID = "1BLltyU70nZ4gxCesSp7RrkhBrgW_UUMTSqNdaNcpnUc"

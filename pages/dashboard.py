@@ -54,5 +54,5 @@ if st.button("Fetch My Data"):
         st.line_chart(df["resilience_score"],use_container_width=True)
     with col2:
         st.subheader("Last Checked Results")
-        new_df = df[['anxiety_index', 'resilience_score'],['wellbeing_score']]
+        new_df = df[["anxiety_index", "resilience_score"],["wellbeing_score"]]
         st.table(new_df)

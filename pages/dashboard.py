@@ -51,4 +51,4 @@ if st.button("Fetch My Data"):
     col1,col2=st.columns(2)
     with col1:
         st.subheader("Resilience score overtime")
-        st.line_chart(df["resilience_score"],color= "ornage")
+        st.line_chart(df["resilience_score"])

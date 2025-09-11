@@ -35,11 +35,7 @@ if "student_name" not in st.session_state:
     st.session_state.student_name = ""
 if "age" not in st.session_state:
     st.session_state.age = ""
-st.sidebar.title("Welcome!")
-st.sidebar.empty()
-with st.sidebar.expander("Creators :"):
-    st.markdown("1. Karthikeya Kumar\n2. Sai Sri Raj\n3. Anand Karthik\n4. Partha Saradhi")
-    
+  
 # Initialize session state
 if 'test_started' not in st.session_state:
     st.session_state.test_started = False
@@ -568,7 +564,6 @@ if st.session_state.form_submitted:
             f"7. Academic Performance: {st.session_state.q7}\n"
             f"8. Headache: {st.session_state.q8}\n"
             f"9. Safety: {st.session_state.q9}\n"
-            f"10. Basic Needs: {st.session_state.q10}\n"
             f"10. Basic Needs: {st.session_state.q10}\n"
             )
             pdf.set_font("Arial", 'B', 14)

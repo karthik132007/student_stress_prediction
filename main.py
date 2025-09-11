@@ -73,7 +73,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
         st.header("📝 Questionnaire")
         
         st.markdown("<h4 style='font-size:20px;'>1.👉 On a scale of 0 to 30, how confident do you feel about yourself and your abilities?</h4>", unsafe_allow_html=True)
-        q1 = st.slider("**Self Esteem**", 0, 30, value=15)
+        q1 = st.slider("**Self Esteem**", 0, 30, value=0)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>2.👉 In the past few months, how often have you experienced or felt affected by bullying?</h4>", unsafe_allow_html=True)
@@ -85,7 +85,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
             "Very Often",
             "Constantly"
         ]
-        q2 = st.radio("**Bullying**", q2_options, index=0)
+        q2 = st.radio("**Bullying**", q2_options)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>3.👉 How would you rate your sleep quality recently?</h4>", unsafe_allow_html=True)
@@ -97,7 +97,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
             "Good",
             "Excellent"
         ]
-        q3 = st.radio("**Sleep Quality**", q3_options, index=3)
+        q3 = st.radio("**Sleep Quality**", q3_options)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>4. 👉 To what extent are you worried about your future career?</h4>", unsafe_allow_html=True)
@@ -109,15 +109,15 @@ if st.session_state.test_started and not st.session_state.form_submitted:
             "Very concerned",
             "Extremely concerned"
         ]
-        q4 = st.radio("**Future Career Concerns**", q4_options, index=2)
+        q4 = st.radio("**Future Career Concerns**", q4_options)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>5.👉 On a scale of 0 to 20, how often have you experienced symptoms of anxiety such as nervousness, worry, or restlessness?</h4>", unsafe_allow_html=True)
-        q5 = st.slider("**Anxiety Level**", 0, 20, value=5)
+        q5 = st.slider("**Anxiety Level**", 0, 20)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>6.👉 On a scale of 0 to 30, how often have you felt down, hopeless, or lost interest in daily activities?</h4>", unsafe_allow_html=True)
-        q6 = st.slider("**Depression**", 0, 30, value=5)
+        q6 = st.slider("**Depression**", 0, 30)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>7.👉 How would you rate your academic performance currently?</h4>", unsafe_allow_html=True)
@@ -129,7 +129,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
             "Good",
             "Excellent"
         ]
-        q7 = st.radio("**Academic Performance**", q7_options, index=3)
+        q7 = st.radio("**Academic Performance**", q7_options)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>8.👉 How often do you experience headaches?</h4>", unsafe_allow_html=True)
@@ -141,7 +141,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
             "Often",
             "Very Frequently"
         ]
-        q8 = st.radio("**Headache**", q8_options, index=1)
+        q8 = st.radio("**Headache**", q8_options)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>9.👉 How safe do you feel in your daily environment (home, college, outside)?</h4>", unsafe_allow_html=True)
@@ -153,7 +153,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
             "Mostly Safe",
             "Very Safe"
         ]
-        q9 = st.radio("**Safety**", q9_options, index=4)
+        q9 = st.radio("**Safety**", q9_options)
         st.markdown("---")
         
         st.markdown("<h4 style='font-size:20px;'>10.👉 To what extent are your basic needs (food, shelter, financial support) being met?</h4>", unsafe_allow_html=True)
@@ -165,7 +165,7 @@ if st.session_state.test_started and not st.session_state.form_submitted:
             "Mostly Met", 
             "Completely Met"
         ]
-        q10 = st.radio("**Basic Needs**", q10_options, index=4)
+        q10 = st.radio("**Basic Needs**", q10_options)
 
         submitted = st.form_submit_button("Submit Assessment")
 

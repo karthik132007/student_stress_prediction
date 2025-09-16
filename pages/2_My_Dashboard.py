@@ -27,10 +27,7 @@ def get_user_data(phone_number: str):
     return user_df
 
 # ---- Streamlit UI ----
-st.sidebar.title("Welcome!")
-st.sidebar.empty()
-with st.sidebar.expander("Creators :"):
-    st.markdown("1. Karthikeya Kumar\n2. Sai Sri Raj\n3. Anand Karthik\n4. Partha Saradhi")
+
 
 st.title("📊 Personal Dashboard")
 

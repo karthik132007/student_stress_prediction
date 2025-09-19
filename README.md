@@ -22,17 +22,16 @@ student_stress_prediction/
    ├── requirements.txt # Python dependencies
    ├── pages/ # Additional Streamlit pages
    ├── .streamlit/ # Streamlit configuration
-````
+
 
 ---
 
 ## ⚙️ Installation
 
 1. **Clone this repo**
-   ```bash
-   git clone https://github.com/your-username/student_stress_prediction.git
+   git clone [https://github.com/karthik132007/student_stress_prediction.git](https://github.com/karthik132007/student_stress_prediction)
    cd student_stress_prediction
-````
+
 
 2. **Create a virtual environment (optional but recommended)**
 

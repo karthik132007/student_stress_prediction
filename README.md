@@ -13,17 +13,17 @@ This project uses a trained ML model to analyze patterns in student behavior, li
 ```
 
 student_stress_prediction/
-├── main.py # Streamlit app entry point
-├── model_utils.py # Helper functions for ML model
-├── training.ipynb # Jupyter Notebook for training the model
-├── model.pkl # Saved trained ML model
-├── scaler.pkl # Preprocessing scaler
-├── StressLevelDataset.csv # Main dataset used for training
-├── top_10_mental_health_hospitals_india.csv # Reference dataset
-├── questions.txt # Survey questions
-├── requirements.txt # Python dependencies
-├── pages/ # Additional Streamlit pages
-├── .streamlit/ # Streamlit configuration
+   ├── main.py # Streamlit app entry point
+   ├── model_utils.py # Helper functions for ML model
+   ├── training.ipynb # Jupyter Notebook for training the model
+   ├── model.pkl # Saved trained ML model
+   ├── scaler.pkl # Preprocessing scaler
+   ├── StressLevelDataset.csv # Main dataset used for training
+   ├── top_10_mental_health_hospitals_india.csv # Reference dataset
+   ├── questions.txt # Survey questions
+   ├── requirements.txt # Python dependencies
+   ├── pages/ # Additional Streamlit pages
+   ├── .streamlit/ # Streamlit configuration
 ````
 
 ---

@@ -12,19 +12,18 @@ This project uses a trained ML model to analyze patterns in student behavior, li
 ## 📂 Project Structure
 ```
 
-.
-├── main.py                     # Streamlit app entry point
-├── model\_utils.py              # Helper functions for ML model
-├── traning.ipynb               # Jupyter Notebook for training (typo: 'training')
-├── model.pkl                   # Trained ML model
-├── scaler.pkl                  # Preprocessing scaler
-├── StressLevelDataset.csv      # Main dataset
-├── top\_10\_mental\_health\_hospitals\_india.csv # Reference data
-├── questions.txt               # Survey questions
-├── requirements.txt            # Python dependencies
-├── pages/                      # Additional Streamlit pages
-├── .streamlit/                 # Streamlit configuration
-
+student_stress_prediction/
+├── main.py # Streamlit app entry point
+├── model_utils.py # Helper functions for ML model
+├── training.ipynb # Jupyter Notebook for training the model
+├── model.pkl # Saved trained ML model
+├── scaler.pkl # Preprocessing scaler
+├── StressLevelDataset.csv # Main dataset used for training
+├── top_10_mental_health_hospitals_india.csv # Reference dataset
+├── questions.txt # Survey questions
+├── requirements.txt # Python dependencies
+├── pages/ # Additional Streamlit pages
+├── .streamlit/ # Streamlit configuration
 ````
 
 ---
@@ -102,9 +101,4 @@ Then open the link in your browser (usually `http://localhost:8501/`).
 * Deploy on ** Heroku / AWS**.
 * Expand dataset for better generalization.
 
-```
 
----
-
-Want me to also cook up a **short version** (like a 10-line minimal README) that you can use if you prefer a lightweight one instead of this detailed doc?
-```

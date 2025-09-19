@@ -1,13 +1,13 @@
 
 
-# 🎓 Student Stress Prediction
+# Student Stress Prediction
 
 A Machine Learning + Streamlit web app that predicts the **stress levels of students** based on survey responses.  
 This project uses a trained ML model to analyze patterns in student behavior, lifestyle, and academics to classify stress levels.  
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 
 student_stress_prediction/
@@ -26,7 +26,7 @@ student_stress_prediction/
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 1. **Clone this repo**
    git clone [https://github.com/karthik132007/student_stress_prediction.git](https://github.com/karthik132007/student_stress_prediction)
@@ -49,7 +49,7 @@ student_stress_prediction/
 
 ---
 
-## ▶️ Usage
+## Usage
 
 Run the Streamlit app:
 
@@ -61,7 +61,7 @@ Then open the link in your browser (usually `http://localhost:8501/`).
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 * **StressLevelDataset.csv** → Contains survey responses about student lifestyle, academics, and stress indicators.
 * **questions.txt** → Survey questions used to collect responses.
@@ -69,7 +69,7 @@ Then open the link in your browser (usually `http://localhost:8501/`).
 
 ---
 
-## 🧠 Model Training
+## Model Training
 
 * The training pipeline is inside `traning.ipynb`.
 * The model is trained using classical ML techniques (check the notebook for details).
@@ -78,7 +78,7 @@ Then open the link in your browser (usually `http://localhost:8501/`).
 
 ---
 
-## 🌟 Features
+## Features
 
 * Predicts **stress levels** based on student survey inputs.
 * Interactive **Streamlit UI**.

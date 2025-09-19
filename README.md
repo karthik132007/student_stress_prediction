@@ -8,7 +8,7 @@ This project uses a trained ML model to analyze patterns in student behavior, li
 ---
 
 ## Project Structure
-
+```
 student_stress_prediction/
 ├── main.py                        # Streamlit app entry point
 ├── model_utils.py                  # Helper functions for ML model
@@ -22,7 +22,7 @@ student_stress_prediction/
 ├── pages/                          # Additional Streamlit pages
 └── .streamlit/                     # Streamlit configuration
 
-
+```
 ---
 
 ## Installation

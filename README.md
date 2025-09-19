@@ -1,7 +1,5 @@
 
-Got it 🚀 Here’s a polished **README.md** you can paste straight into your repo:
 
-```markdown
 # 🎓 Student Stress Prediction
 
 A Machine Learning + Streamlit web app that predicts the **stress levels of students** based on survey responses.  
@@ -10,7 +8,7 @@ This project uses a trained ML model to analyze patterns in student behavior, li
 ---
 
 ## 📂 Project Structure
-```
+
 
 student_stress_prediction/
    ├── main.py # Streamlit app entry point
@@ -89,16 +87,5 @@ Then open the link in your browser (usually `http://localhost:8501/`).
 * Provides **mental health resources** (top hospitals in India).
 
 ---
-
-
-
-
----
-
-## 💡 Future Improvements
-
-* Add deep learning models for higher accuracy.
-* Deploy on ** Heroku / AWS**.
-* Expand dataset for better generalization.
 
 
